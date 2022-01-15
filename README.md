@@ -29,10 +29,10 @@ cd ∼/RWA2_simulator/mms/bin
 
 Running the package:
 1. Click on “Edit Algorithm” or edit button in mouse:
-Set the name of the mouse.
-Choose the Directory file as the source folder (src) of the given package.
-Enter the Build Command as “g++ api.cpp main.cpp mouse.cpp node.cpp”.
-Run Command  : ./a.out.
-2. Click on BUILD in the simulator
-3. Select the maze 2 or maze 4.
-4. Click on RUN.
+2. Set the name of the mouse.
+3. Choose the Directory file as the source folder (src) of the given package.
+4. Enter the Build Command as “g++ api.cpp main.cpp mouse.cpp node.cpp”.
+5. Run Command  : ./a.out.
+6. Click on BUILD in the simulator
+7. Select the maze 2 or maze 4.
+8. Click on RUN.
