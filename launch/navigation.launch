@@ -1,0 +1,21 @@
+<launch>
+  <!--<param name="/use_sim_time" value="true"/>-->
+
+  <!-- Run the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find final_project)/maps/final_world.yaml" >
+    <param name="frame_id" value="map" />
+  </node>
+
+
+  <!-- Properties of each robot      -->
+  <!-- start amcl -->
+  <include file="$(find final_project)/launch/explorer_amcl.launch" />
+  <include file="$(find final_project)/launch/follower_amcl.launch" />
+
+  <!-- start move base-->
+	<include file="$(find final_project)/launch/explorer_move_base.launch" />
+	<include file="$(find final_project)/launch/follower_move_base.launch" />
+
+  <!-- launch rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find final_project)/rviz/turtlebot3_navigation.rviz" />
+</launch>

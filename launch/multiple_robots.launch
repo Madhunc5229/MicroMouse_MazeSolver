@@ -1,0 +1,74 @@
+<launch>
+  <arg name="world_name" default="$(find final_project)/world/final_world.world" />
+  <arg name="gazebo_ros_output" default="screen"/>
+  <!-- load content of targets.yaml into the Parameter Server -->
+  <rosparam file="$(find final_project)/param/aruco_lookup.yaml" command="load" />
+
+
+<!-- <node name="gazebo" pkg="gazebo_ros" type="gazebo"
+   args="$(find aws_robomaker_small_house_world)/worlds/small_house.world" respawn="false" output="screen" /> -->
+
+  <!-- Launch gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_name)" />
+    <arg name="paused" value="false" />
+    <arg name="use_sim_time" value="true" />
+    <arg name="gui" value="true" />
+    <arg name="verbose" value="false" />
+    <arg name="debug" value="false" />
+    <arg name="output" value="$(arg gazebo_ros_output)" />
+  </include>
+
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_waffle.urdf.xacro laser_visual:=false" />
+
+ <!-- start marker detector -->
+  <node name="aruco_detect" pkg="aruco_detect" type="aruco_detect">
+    <param name="image_transport" value="compressed" />
+    <param name="publish_images" value="true" />
+    <param name="fiducial_len" value="0.15" />
+    <param name="dictionary" value="0" />
+    <param name="do_pose_estimation" value="true" />
+    <param name="ignore_fiducials" value="" />
+    <param name="fiducial_len_override" value="" />
+    <remap from="/camera/compressed" to="/explorer/camera/rgb/image_raw/compressed" />
+    <remap from="/camera_info" to="/explorer/camera/rgb/camera_info" />
+  </node>
+
+  <!-- explorer robot-->
+  <group ns="explorer">
+    <param name="tf_prefix" value="explorer_tf" />
+    <include file="$(find final_project)/launch/single_robot.launch" >
+      <arg name="init_pose" value="-x -4 -y 2.5 -z 0" />
+      <arg name="robot_name"  value="explorer" />
+    </include>
+  </group>
+
+  <!-- follower robot-->
+  <group ns="follower">
+      <param name="tf_prefix" value="follower_tf" />
+    <include file="$(find final_project)/launch/single_robot.launch" >
+      <arg name="init_pose" value="-x -4 -y 3.5 -z 0" />
+      <arg name="robot_name"  value="follower" />
+    </include>
+  </group>
+
+  <!-- Navigation -->
+  <!-- Run the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find final_project)/maps/final_world.yaml">
+    <param name="frame_id" value="map" />
+  </node>
+
+
+  <!-- Properties of each robot      -->
+  <!-- start amcl -->
+  <include file="$(find final_project)/launch/explorer_amcl.launch" />
+  <include file="$(find final_project)/launch/follower_amcl.launch" />
+
+  <!-- start move base-->
+  <include file="$(find final_project)/launch/explorer_move_base.launch" />
+  <include file="$(find final_project)/launch/follower_move_base.launch" />
+
+  <!-- launch rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find final_project)/rviz/turtlebot3_navigation.rviz" />
+
+</launch>

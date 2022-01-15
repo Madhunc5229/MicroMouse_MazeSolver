@@ -1,0 +1,34 @@
+<launch>
+  <arg name="world_name" default="$(find final_project)/world/final_world.world" />
+  <arg name="model" default="waffle" />
+  <arg name="x" default="-4" />
+  <arg name="y" default="2.5" />
+  <arg name="yaw" default="0" />
+  <arg name="map_file" default="$(find final_project)/maps/final_world.yaml" />
+  <arg name="rviz_config" default="$(find final_project)/rviz/navigation.rviz" />
+
+  <!-- Launch turtlebot3 bringup -->
+  <include file="$(find final_project)/launch/mapping/bringup.launch">
+    <arg name="world_name" value="$(arg world_name)" />
+    <arg name="model" value="$(arg model)" />
+    <arg name="x" value="$(arg x)" />
+    <arg name="y" value="$(arg y)" />
+    <arg name="yaw" value="$(arg yaw)" />
+    <arg name="rviz_config" value="$(arg rviz_config)" />
+  </include>
+
+  <!-- Load the map -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!-- Start localization -->
+  <include file="$(find final_project)/launch/mapping/start_amcl.launch">
+    <arg name="initial_pose_x" value="$(arg x)" />
+    <arg name="initial_pose_y" value="$(arg y)" />
+    <arg name="initial_pose_a" value="$(arg yaw)" />
+  </include>
+
+<!--  Start navigation-->
+  <include file="$(find turtlebot3_navigation)/launch/move_base.launch">
+    <arg name="model" value="$(arg model)" />
+  </include>
+</launch>
