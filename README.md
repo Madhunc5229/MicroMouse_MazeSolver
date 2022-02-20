@@ -3,7 +3,7 @@ Depth-First Search (DFS) algorithm based C++ project to task a micro mouse to re
 
 Instructions to run the project:
 
-Clone the repository into your catkin_build workspace:
+Clone the repository into your catkin_build workspace:\n
 `git clone https://github.com/Madhunc5229/MicroMouse_MazeSolver`
 
 Setting up API Simulator:
