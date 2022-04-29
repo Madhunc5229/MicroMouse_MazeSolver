@@ -1,6 +1,6 @@
 /**
  * @file mouse.h
- * @author Zeid Kootbally (zeidk@umd.edu)
+ * @author Madhu Narra Chittibabu (madhunc117@gmail.com)
  * @brief The file contains the Mouse class
  * @version 0.1
  * @date 2021-10-24
